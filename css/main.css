@@ -1,0 +1,46 @@
+body {
+    background:url(http://subtlepatterns.com/patterns/swirl_pattern.png)
+}
+.container {
+    padding-top:5%;
+}
+#content {
+    height:300px;
+}
+.sequence, .while, .while-condition, .while-body, .switch-condition, .switch-body {
+    border:1px solid rgb(66, 139, 202);
+    border-radius:4px;
+    padding:1px;
+}
+
+.switch-case{
+    float:left;
+}
+.while {
+    display:table;
+    width:100%;
+}
+.while-body {
+    width:95%;
+    float:right;
+    display:table-row;
+}
+.sequence {
+}
+button {
+    border-style:none;
+    background-color:rgba(255, 0, 0, 0.0);
+}
+.displayNone {
+    display:none;
+}
+#openFileDialog {
+    visibility:hidden;
+}
+.appendable:hover{
+    border-bottom:2px #428BCA dashed;
+    /*box-shadow: inset 0px -2px 2px 0px #428BCA;*/
+}
+footer{
+	text-align: center;
+}
