@@ -87,16 +87,83 @@ function displayAlert(message, type) {
 /*
 *   returns index of added object
 */
+
+/**
+* @syntax addItem(type, index)
+* @description Adds a new Struktugrammer Object at the specified index
+* @description Valid types are: stgr_seq, stgr_while, stgr_repeat, stgr_sub, stgr_if, stgr_switch, stgr_grpend, stgr_empty, stgr_case
+* 
+* @param {string} type Type of the structure to be generated
+* @param {integer} index Index at which the new structure will be inserted
+* 
+* @return The index of the generated structure
+*/
 function addItem(type, index){
+    
     console.log("Add Item");
-    if (typeof index === "undefined"){
+    if (typeof index === "undefined" || index > items.length){
         index = items.length;
     }
     //add new item at the end of array
-    items[index] = {
-        "type":type,
-        "text":"Test"
-    };
+    var insert = [];
+    switch (type){
+        case "stgr_seq":
+            insert = [{"type":"stgr_seq","text":"Test"}
+                     ];
+            break;
+            
+        case "stgr_if":
+            insert = [{"type":"stgr_if","text":"Cond"},
+                      {"type":"stgr_empty","text":""},
+                      {"type":"stgr_grpend","text":""},
+                      {"type":"stgr_empty","text":""},
+                      {"type":"stgr_grpend","text":""}
+                     ];
+            break;
+        
+        case "strg_while":
+            insert = [{"type":"stgr_while","text":""},
+                      {"type":"stgr_empty","text":""},
+                      {"type":"stgr_grpend","text":""}
+                     ];
+            break;
+            
+        case "strg_repeat":
+            insert = [{"type":"stgr_repeat","text":""},
+                      {"type":"stgr_empty","text":""},
+                      {"type":"stgr_grpend","text":""}
+                     ];
+            break;
+            
+        case "strg_switch":
+            insert = [{"type":"stgr_switch","text":""},
+                      {"type":"stgr_case","text":""},
+                      {"type":"stgr_empty","text":""},
+                      {"type":"stgr_grpend","text":""},
+                      {"type":"stgr_grpend","text":""}
+                     ];
+            break;
+            
+        case "strg_case":
+            insert = [{"type":"stgr_case","text":""},
+                      {"type":"stgr_empty","text":""},
+                      {"type":"stgr_grpend","text":""}
+                     ];
+            break;    
+            
+        case "strg_sub":
+            insert = [{"type":"stgr_seq","text":""}
+                     ];
+            break;
+        
+        default:
+            insert = [{"type":"stgr_empty","text":""}];
+            break;
+    }
+    //Loop through the elements of insert and inject them into items
+    for (var i = 0; i<insert.length; i++){
+        items.splice(index+i,0,insert[i]);
+    }
     //return its index
     return (index);
 }
@@ -140,6 +207,13 @@ function handleFileSelect(evt) {
 
         //Parse the reader result to a string array
         stg_array = parseSTG(byte_result, text_result);
+        if (parse_structure(stg_array) === 0){
+            console.log("Parsing succesfull");
+        }
+        else {
+            console.log("Parsing failed");
+        }
+             
     };
 
     for (var i = 0, f; f = files[i]; i++) {
@@ -171,7 +245,7 @@ function parseSTG(byte_result, text_result) {
 
     // Find the beginning of the Procedure
     for (var i = 0; i < byte_result.length; i++) {
-        if (byte_result[i] == 02 && byte_result[i + 1] == 14) {
+        if (byte_result[i] === 02 && byte_result[i + 1] === 14) {
             Index = i + 2;
             break;
         }
@@ -197,6 +271,35 @@ function parseSTG(byte_result, text_result) {
     return stg_array;
 }
 
+/**
+ * @syntax parse_structure(array[string1, string2, ...])
+ * @description parse_structure takes a stg string array as input and parses it to objects which it inserts into items
+ * 
+ * @param {array} stg_array An array of strings
+ */
 function parse_structure(stg_array){
-    
+    items = [];
+    for (var i=0; i < stg_array.length(); i++){
+        switch (stg_array[i]){
+            case "OT_STGRSEQ":
+                items.splice(items.length, 0, {"type":"stgr_seq", "text": stg_array[i+1]});
+                i+=1;
+                break;
+            
+            case "OT_STGRIF":
+                items.splice(items.length, 0, {"type":"stgr_if","text":stg_array[i+1]});
+                i+=1;
+                break;
+            
+            case "OT_STGRWHILE":
+                items.splice(items.length, 0, {"type":"stgr_while","text":stg_array[i+1]});
+                i+=1;
+                break;
+            
+            case "GRPEND":
+                items.splice(items.length, 0, {"type":"stgr_grpend","text":""});
+                break;
+            
+        }
+    }
 }
