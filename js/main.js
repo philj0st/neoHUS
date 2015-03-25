@@ -2,30 +2,30 @@
 *   1.GUI Core functions
 */
 function drawView(){
+    /*
+     * This function deletes the display and rebuilds it
+     */
     $('#content').empty();
-    populate(structure);
+    populate(items);
 }
 
-//if nested level needs to be known for further development we could add a counter
-function populate(structure){
-
-    for (var item in structure) {
-        if ($.isArray(structure[item])) {
-            //if it's an array go deeper
-            populate(structure[item]);
-        }else{
-            //local variable lifetime: Local variables are deleted when the function is completed. does it count for else{}?
-            //add it's index as id property
-            var obj = items[structure[item]];
-            obj.id = structure[item];
-            $('#content').append($("<div/>", obj));
-        }
-    };
+function populate(items){
+    console.log("Populating...");
+    //loop through objects in items and populate the view
+    items.forEach( function (item) {
+        //local variable lifetime: Local variables are deleted when the function is completed. does it count for else{}?
+        //need to look into closures properly!
+        //add it's index as id property
+        var obj = item;
+        obj.id = items.indexOf(item);
+        console.log(obj.id);
+        $('#content').append($("<div/>", obj));
+    });
+    console.log("Populate done");
 }
 
 function clear(){
     items = [];
-    structure = [];
     drawView();
 }
 
@@ -33,10 +33,27 @@ function clear(){
 *   1.1 Menu Click-Eventhandler
 */
 $('.addItem').on('click', function(){
-    addStructure(2, addItem($(this).attr('id')), structure);
+    addItem(this.id,items.length);
+    drawView();
 });
 
 $('.new_view').on('click', function(){
+    //Load the item-array with dummy data
+    items = [
+    {
+        "text":"Hardcoded Datastructure until we can import from file",
+        "type":"stgr_seq"
+    },{
+        "text":"only sequences for the beginning",
+        "type":"stgr_seq"
+    },{
+        "text":"let's do an initial commit",
+        "type":"stgr_seq"
+    },{
+        "text":"enough dummy data now",
+        "type":"stgr_seq"
+    }
+    ];
     drawView();
 });
 
@@ -70,50 +87,22 @@ function displayAlert(message, type) {
 /*
 *   returns index of added object
 */
-function addItem(type){
+function addItem(type, index){
+    console.log("Add Item");
+    if (typeof index === "undefined"){
+        index = items.length;
+    }
     //add new item at the end of array
-    items[items.length] = {
-        "text":"",
-        "type":type
+    items[index] = {
+        "type":type,
+        "text":"Test"
     };
     //return its index
-    return (items.length -1);
+    return (index);
 }
 
-/*
-*   returns true if added successful
-*/
-function addStructure(predecessor, idToAdd, structure){
-    for (var i = 0; i < structure.length; i++) {
-        if (structure[i] == predecessor) {
-            //add idToAdd after predecessor
-            structure.splice(predecessor+1,0,idToAdd);
-            return true;
-        }else if ($.isArray(structure[i])) {
-            addStructure(predecessor, idToAdd, structure[i]);
-        };
-    };
-    return false;
-}
-
-//data structure
-items = [
-    {
-        "text":"Hardcoded Datastructure until we can import from file",
-        "type":"sequence"
-    },{
-        "text":"only sequences for the beginning",
-        "type":"sequence"
-    },{
-        "text":"let's do an initial commit",
-        "type":"sequence"
-    },{
-        "text":"enough dummy data now",
-        "type":"sequence"
-    }
-];
-
-structure = [0,[1,2],3];
+//Global blank data array
+items = [];
 
 
 /**
@@ -208,6 +197,6 @@ function parseSTG(byte_result, text_result) {
     return stg_array;
 }
 
-function parse_structure(items, structure, stg_array){
+function parse_structure(stg_array){
     
 }
