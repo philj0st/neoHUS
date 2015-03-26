@@ -8,31 +8,48 @@ function drawView(){
     $('#content').empty();
     checkStructure()?console.log("Structure Clearing failed"):console.log("Structure is clear");
     populate(items);
+    registerEventhandler();
 }
 
 /**
- * @description Loops through an array of Objects and generates HTML divs in the content class
+ * @description Loops through an array of Objects and generates nested HTML divs in the content class
  * @param {Array|JSON Objects} items
+ * @param parent array used for recursive loop
  * @returns {undefined}
  */
 function populate(items){
+    var parent = ["content"];
     console.log("Populating...");
     //loop through objects in items and populate the view
-    items.forEach( function (item) {
-        //local variable lifetime: Local variables are deleted when the function is completed. does it count for else{}?
-        //need to look into closures properly!
-        //add it's index as id property
-        var obj = item;
-        obj.id = items.indexOf(item);
-        console.log(obj.id);
-        $('#content').append($("<div/>", obj));
-    });
+    for (i in items){
+        var item = items[i];
+        item.id = i;
+        //if sequence append to last element of parent array
+        if (item.type === "stgr_seq") {
+            item.contenteditable = "true";
+            $('#'+parent.last()).append($("<div/>", item));
+        //if grpend then pop the last element of the parent array
+        }else if (item.type === "stgr_grpend") {
+            parent.pop();
+        //if it's nested deeper e.x after a while type then push the id of the while element to the parent array
+        }else if (["stgr_while","stgr_if","stgr_repeat","stgr_case"].indexOf(item.type) !== -1) {
+            $('#'+parent.last()).append($("<div/>", item));
+            parent.push(item.id);
+        };
+    }
     console.log("Populate done");
 }
 
 function clear(){
     items = [];
     drawView();
+}
+
+function registerEventhandler(){
+    $('[contenteditable="true"]').blur(function(){
+        console.log("edited!");
+        changeText($(this).attr('id'),$(this).html());
+    });
 }
 
 /**
@@ -51,12 +68,16 @@ $('.new_view').on('click', function(){
         type:"stgr_seq"
     },{
         text:"only sequences for the beginning",
-        type:"stgr_seq"
+        type:"stgr_if"
     },{
         text:"let's do an initial commit",
         type:"stgr_seq"
     },{
         text:"enough dummy data now",
+        type:"stgr_grpend"
+    },
+    {
+        text:"on root lvl",
         type:"stgr_seq"
     }
     ];
@@ -72,6 +93,7 @@ $('#openFile').on('click', function(){
 });
 
 $('#openFileDialog').on('change', handleFileSelect);
+
 /**
 *   1.2 Other GUI
 */
@@ -90,9 +112,16 @@ function displayAlert(message, type) {
 *   2. Model manipulation
 */
 
-/*
-*   returns index of added object
+/**
+* @syntax addItem(id, text)
+* @description changes the id's text to the text param
+* @param {integer} index Index at which the text should get changed
+* @param {string} text which should be added to the object at the param id
 */
+function changeText (id, text) {
+    items[id].text = text;
+    drawView();
+}
 
 /**
 * @syntax addItem(type, index)
@@ -178,8 +207,20 @@ function addItem(type, index){
 items = [];
 
 
+/**
+*   3. Extend JS Language to our needs. #Bend to my will Java Script! 
+*/
+//if the browser's javascript engine doesn't support the Array.last() function (which in fact is the case for every modern browser)
+if (!Array.prototype.last){
+    //then we add it ourselves :-3
+    Array.prototype.last = function(){
+        return this[this.length - 1];
+    };
+};
+
 /*
  * All functions related to the STG Parser
+ * #TODO: exclude in separate Library?
  */
 
 /**
