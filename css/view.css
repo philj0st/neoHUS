@@ -1,0 +1,104 @@
+/*
+VORSCHLAG für Div-basierte View:
+file: div-view.html
+
+
+NeoHUS Struktogrammer CSS for all the blocks
+
+*/
+/* 
+    Created on : 26.03.2015, 11:20:28
+    Author     : pki
+*/
+
+
+.procedure {
+    max-width: 600px;
+    border: 1px solid black;
+}
+
+/*** Sequence Blocks ***************************/
+
+.stgr_seq {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+/*** Subroutine calls **************************/
+
+.stgr_sub {
+    border: 1px solid black;
+    
+}
+
+.stgr_sub-inner {
+    width: 95%;
+    margin: auto;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    padding: 10px;
+}
+
+/*** loops ***********************************/
+
+.stgr_loop {
+    border: 1px solid black;
+}
+
+.stgr_condition {
+    padding: 10px;
+}
+
+.stgr_loop-body {
+    margin-left: 5%;
+}
+
+/*** if & switch  ****************************/
+
+.stgr_if {
+   border: 1px solid black;
+   width: 100%;
+   
+}
+
+.stgr_switch-condition {
+    padding: 10px;
+    text-align: center;
+}
+
+.stgr_switch-body {
+    //margin: 0 auto;
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+
+
+.stgr_column {
+
+    display: table-cell;
+    width: auto;
+
+    
+}
+
+.stgr_case {
+    border-right: 1px solid black;
+    padding: 10px;
+}
+
+.stgr_case-default {
+    border: 0;
+    text-align: right;
+}
+
+/**** control elements ************************/
+
+.stgr_empty {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.stgr_grpend {
+    display: hidden;
+}
