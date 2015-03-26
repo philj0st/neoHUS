@@ -187,8 +187,6 @@ function handleFileSelect(evt) {
     var stg_array = [];
 
     // Arrays for the model
-    var items = [];
-    var structure = [];
 
     reader = new FileReader();
 
@@ -207,8 +205,9 @@ function handleFileSelect(evt) {
 
         //Parse the reader result to a string array
         stg_array = parseSTG(byte_result, text_result);
-        if (parse_structure(stg_array) === 0){
+        if (parse_structure(stg_array) == 0){
             console.log("Parsing succesfull");
+            drawView();
         }
         else {
             console.log("Parsing failed");
@@ -216,14 +215,14 @@ function handleFileSelect(evt) {
              
     };
 
-    for (var i = 0, f; f = files[i]; i++) {
-        if (/.stg/.test(f.name)) {
+    for (var i = 0, file; file = files[i]; i++) {
+        if (/.stg/.test(file.name)) {
             //Take the first .stg file and parse it
             console.log('Successfully loaded the STG');
             //reader will invoke reader.onleadend when finished
-            reader.readAsBinaryString(f);
+            reader.readAsBinaryString(file);
         } else {
-            console.log(f.name,' is not a supported file type</p>');
+            console.log(file.name,' is not a supported file type</p>');
         }
     }
 
@@ -235,8 +234,8 @@ function parseSTG(byte_result, text_result) {
     
     var ProcStart;
     var ProcName;
-    var Index;
-    var stg_array = [];
+    var Index = 0;
+    var parseArray = [];
 
     //Match the procedure name
     var ValidStrings = text_result.match(/[a-zA-Z0-9_-]{2,}/g);
@@ -260,15 +259,15 @@ function parseSTG(byte_result, text_result) {
             for (i = Index + 2; i < Index + length + 2; i++) {
                 tempString += text_result.charAt(i);
             }
-            stg_array.push(tempString);
+            parseArray.push(tempString);
             Index += (length + 2);
         } else {
             Index++;
         }
     }
     console.log('Returning the array');
-    console.log(stg_array.join(' .:. '));
-    return stg_array;
+    console.log(parseArray.join(' .:. '));
+    return parseArray;
 }
 
 /**
@@ -279,7 +278,8 @@ function parseSTG(byte_result, text_result) {
  */
 function parse_structure(stg_array){
     items = [];
-    for (var i=0; i < stg_array.length(); i++){
+    var state = 1;
+    for (var i=0; i < stg_array.length; i++){
         switch (stg_array[i]){
             case "OT_STGRSEQ":
                 items.splice(items.length, 0, {"type":"stgr_seq", "text": stg_array[i+1]});
@@ -301,5 +301,9 @@ function parse_structure(stg_array){
                 break;
             
         }
+        if (i === stg_array.length -1){
+            state = 0;
+        }
     }
+    return state;
 }
