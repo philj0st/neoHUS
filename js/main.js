@@ -6,6 +6,7 @@ function drawView(){
      * This function deletes the display and rebuilds it
      */
     $('#content').empty();
+    checkStructure()?console.log("Structure Clearing failed"):console.log("Structure is clear");
     populate(items);
 }
 
@@ -46,17 +47,17 @@ $('.new_view').on('click', function(){
     //Load the item-array with dummy data
     items = [
     {
-        "text":"Hardcoded Datastructure until we can import from file",
-        "type":"stgr_seq"
+        text:"Hardcoded Datastructure until we can import from file",
+        type:"stgr_seq"
     },{
-        "text":"only sequences for the beginning",
-        "type":"stgr_seq"
+        text:"only sequences for the beginning",
+        type:"stgr_seq"
     },{
-        "text":"let's do an initial commit",
-        "type":"stgr_seq"
+        text:"let's do an initial commit",
+        type:"stgr_seq"
     },{
-        "text":"enough dummy data now",
-        "type":"stgr_seq"
+        text:"enough dummy data now",
+        type:"stgr_seq"
     }
     ];
     drawView();
@@ -113,56 +114,56 @@ function addItem(type, index){
     var insert = [];
     switch (type){
         case "stgr_seq":
-            insert = [{"type":"stgr_seq","text":"Test"}
+            insert = [{type:"stgr_seq",text:"Test"}
                      ];
             break;
             
         case "stgr_if":
-            insert = [{"type":"stgr_if","text":"Cond"},
-                      {"type":"stgr_empty","text":""},
-                      {"type":"stgr_grpend","text":""},
-                      {"type":"stgr_empty","text":""},
-                      {"type":"stgr_grpend","text":""}
+            insert = [{type:"stgr_if",text:"Cond"},
+                      {type:"stgr_empty",text:""},
+                      {type:"stgr_grpend",text:""},
+                      {type:"stgr_empty",text:""},
+                      {type:"stgr_grpend",text:""}
                      ];
             break;
         
         case "strg_while":
-            insert = [{"type":"stgr_while","text":""},
-                      {"type":"stgr_empty","text":""},
-                      {"type":"stgr_grpend","text":""}
+            insert = [{type:"stgr_while",text:""},
+                      {type:"stgr_empty",text:""},
+                      {type:"stgr_grpend",text:""}
                      ];
             break;
             
         case "strg_repeat":
-            insert = [{"type":"stgr_repeat","text":""},
-                      {"type":"stgr_empty","text":""},
-                      {"type":"stgr_grpend","text":""}
+            insert = [{type:"stgr_repeat",text:""},
+                      {type:"stgr_empty",text:""},
+                      {type:"stgr_grpend",text:""}
                      ];
             break;
             
         case "strg_switch":
-            insert = [{"type":"stgr_switch","text":""},
-                      {"type":"stgr_case","text":""},
-                      {"type":"stgr_empty","text":""},
-                      {"type":"stgr_grpend","text":""},
-                      {"type":"stgr_grpend","text":""}
+            insert = [{type:"stgr_switch",text:""},
+                      {type:"stgr_case",text:""},
+                      {type:"stgr_empty",text:""},
+                      {type:"stgr_grpend",text:""},
+                      {type:"stgr_grpend",text:""}
                      ];
             break;
             
         case "strg_case":
-            insert = [{"type":"stgr_case","text":""},
-                      {"type":"stgr_empty","text":""},
-                      {"type":"stgr_grpend","text":""}
+            insert = [{type:"stgr_case",text:""},
+                      {type:"stgr_empty",text:""},
+                      {type:"stgr_grpend",text:""}
                      ];
             break;    
             
         case "strg_sub":
-            insert = [{"type":"stgr_seq","text":""}
+            insert = [{type:"stgr_seq",text:""}
                      ];
             break;
         
         default:
-            insert = [{"type":"stgr_empty","text":""}];
+            insert = [{type:"stgr_empty",text:""}];
             break;
     }
     //Loop through the elements of insert and inject them into items
@@ -292,39 +293,45 @@ function parseSTG(byte_result, text_result) {
 function parse_structure(stg_array){
     items = [];
     var state = 1;
-    for (var i=0; i < stg_array.length; i++){
+    //Begin on index 3, because we don't need the Info before
+    for (var i=3; i < stg_array.length; i++){
         switch (stg_array[i]){
             case "OT_STGRSEQ":
-                items.splice(items.length, 0, {"type":"stgr_seq", "text": stg_array[i+1]});
+                items.splice(items.length, 0, {type:"stgr_seq", text: stg_array[i+1]});
+                i+=1;
+                break;
+                
+            case "OT_STGRSUB":
+                items.splice(items.length, 0, {type:"stgr_sub", text: stg_array[i+1]});
                 i+=1;
                 break;
             
             case "OT_STGRIF":
-                items.splice(items.length, 0, {"type":"stgr_if","text":stg_array[i+1]});
+                items.splice(items.length, 0, {type:"stgr_if",text:stg_array[i+1]});
                 i+=1;
                 break;
             
             case "OT_STGRWHILE":
-                items.splice(items.length, 0, {"type":"stgr_while","text":stg_array[i+1]});
+                items.splice(items.length, 0, {type:"stgr_while",text:stg_array[i+1]});
                 i+=1;
                 break;
             
             case "GRPEND":
-                items.splice(items.length, 0, {"type":"stgr_grpend","text":""});
+                items.splice(items.length, 0, {type:"stgr_grpend",text:""});
                 break;
                 
             case "OT_STGRREPEAT":
-                items.splice(items.length, 0, {"type":"stgr_repeat","text":stg_array[i+1]});
+                items.splice(items.length, 0, {type:"stgr_repeat",text:stg_array[i+1]});
                 i+=1;
                 break;
             
             case "OT_STGRCASE":
-                items.splice(items.length, 0, {"type":"stgr_switch","text":stg_array[i+1]});
+                items.splice(items.length, 0, {type:"stgr_switch",text:stg_array[i+1]});
                 i+=1;
                 break;
                 
             default:
-                items.splice(items.length, 0, {"type":"stgr_case","text":stg_array[i]});
+                items.splice(items.length, 0, {type:"stgr_case",text:stg_array[i]});
                 break;
             
         }
@@ -340,9 +347,13 @@ function parse_structure(stg_array){
  * @returns {Integer}
  */
 function checkStructure(){
-    
     for (var i = 0; i < items.length; i++){
-        
+        if (items[i].type==="stgr_while"||items[i].type==="stgr_if"||items[i].type==="stgr_repeat"||items[i].type==="stgr_case"){
+            if (items[i+1].type==="stgr_grpend"){    
+                items.splice(items.length, 0, {type:"stgr_empty", text: ""});
+                i+=1;
+            }
+        }
     };
     return 0;
 }
