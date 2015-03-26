@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>View example</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/view.css">
+    </head>
+    <body>
+        
+        <h1>Example of pure div view</h1>
+        
+        <p>Anmerkungen: switch/if und while/repeat bestehen aus den selben blöcken. switches werden
+            korrekt dargestellt, ohne das die anzahl cases bekannt ist. 
+        </p>
+        
+        <p>Diagnale striche gibts nur für zahlende user.</p>
+        
+        
+        
+        <div class="procedure">
+            
+            <div class="stgr_seq">SEQUENCE</div>
+            
+            <div class="stgr_loop">
+                <div class="stgr_condition">WHILE CONDITION</div>
+                <div class="stgr_loop-body">
+                    <div class="stgr_sub">
+                        <div class="stgr_sub-inner">SUBROUTINE</div>
+                    </div>
+                </div>
+            </div> <!-- end of while -->
+            
+            <div class="stgr_seq">SEQUENCE</div>
+            
+            <div class="stgr_loop">
+                <div class="stgr_loop-body">
+                    <div class="stgr_seq">SEQUENCE</div>
+                </div>
+                <div class="stgr_condition">REPEAT CONDITION</div> 
+            </div> <!-- end of repeat -->
+            
+            <div class="stgr_seq">SEQUENCE</div>
+            
+            <div class="stgr_if">
+                <div class="stgr_switch-condition">IF CONDITION</div>
+                
+                <div class="stgr_switch-body">
+                    <div class="stgr_column">
+                        <div class="stgr_case">Y</div>
+                        <div class="stgr_seq">SEQUENCE</div>
+                    </div>
+                    <div class="stgr_column">
+                        <div class="stgr_case stgr_case-default">N</div>
+                        <div class="stgr_empty">EMPTY</div>
+                    </div>
+                </div>
+            </div>
+            
+           <div class="stgr_if">
+                <div class="stgr_switch-condition">SWEETCH CONDITION</div>
+                
+                <div class="stgr_switch-body">
+                    <div class="stgr_column">
+                        <div class="stgr_case">1</div>
+                        <div class="stgr_seq">SEQUENCE</div>
+                    </div>
+                    <div class="stgr_column">
+                        <div class="stgr_case">2</div>
+                        <div class="stgr_seq">SEQUENCE</div>
+                    </div>
+                                        <div class="stgr_column">
+                        <div class="stgr_case">3</div>
+                        <div class="stgr_seq">SEQUENCE</div>
+                    </div>
+                    <div class="stgr_column">
+                        <div class="stgr_case stgr_case-default">4</div>
+                        <div class="stgr_empty">EMPTY</div>
+                    </div>
+                </div>
+            </div>                
+            
+            <div class="stgr_seq">SEQUENCE</div>
+                 
+        </div>
+    </body>
+</html>
