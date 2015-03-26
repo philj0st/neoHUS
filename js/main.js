@@ -9,6 +9,11 @@ function drawView(){
     populate(items);
 }
 
+/**
+ * @description Loops through an array of Objects and generates HTML divs in the content class
+ * @param {Array|JSON Objects} items
+ * @returns {undefined}
+ */
 function populate(items){
     console.log("Populating...");
     //loop through objects in items and populate the view
@@ -172,10 +177,15 @@ function addItem(type, index){
 items = [];
 
 
-/**
+/*
  * All functions related to the STG Parser
  */
 
+/**
+ * 
+ * @param {Event} evt
+ * @returns {Integer} 
+ */
 function handleFileSelect(evt) {
     var files = evt.target.files; // FileList object
 
@@ -225,13 +235,16 @@ function handleFileSelect(evt) {
             console.log(file.name,' is not a supported file type</p>');
         }
     }
-
-    //Show a list of read files
+    return 0;
 }
 
-function parseSTG(byte_result, text_result) {
-    /* This function takes the raw data of STG file which was read in - namely a byte array and plaintext of the file - and returns a stripped down string array with the STG-OPCODES and content of the STG cells */
-    
+/**
+ * @description This function takes the raw data of STG file which was read in - namely a byte array and plaintext of the file - and returns a stripped down string array with the STG-OPCODES and content of the STG cells
+ * @param {Array|String} byte_result
+ * @param {Array|String} text_result
+ * @returns {Array|parseSTG.parseArray}
+ */
+function parseSTG(byte_result, text_result) {    
     var ProcStart;
     var ProcName;
     var Index = 0;
@@ -299,6 +312,20 @@ function parse_structure(stg_array){
             case "GRPEND":
                 items.splice(items.length, 0, {"type":"stgr_grpend","text":""});
                 break;
+                
+            case "OT_STGRREPEAT":
+                items.splice(items.length, 0, {"type":"stgr_repeat","text":stg_array[i+1]});
+                i+=1;
+                break;
+            
+            case "OT_STGRCASE":
+                items.splice(items.length, 0, {"type":"stgr_switch","text":stg_array[i+1]});
+                i+=1;
+                break;
+                
+            default:
+                items.splice(items.length, 0, {"type":"stgr_case","text":stg_array[i]});
+                break;
             
         }
         if (i === stg_array.length -1){
@@ -306,4 +333,16 @@ function parse_structure(stg_array){
         }
     }
     return state;
+}
+
+/**
+ * @description Loops through the items Array and checks if some empty structures need to be inserted (for example between a stgr_case and a stgr_grpend object)
+ * @returns {Integer}
+ */
+function checkStructure(){
+    
+    for (var i = 0; i < items.length; i++){
+        
+    };
+    return 0;
 }
