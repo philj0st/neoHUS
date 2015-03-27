@@ -19,83 +19,139 @@ and open the template in the editor.
             korrekt dargestellt, ohne das die anzahl cases bekannt ist. 
         </p>
         
-        <p>Diagonale striche gibts nur für zahlende user.</p>
+        <p>Diagonale Striche gibts nur für zahlende user.</p>
         
         
         
         <div class="procedure">
             
-            <div class="stgr_seq">SEQUENCE</div>
+            <div class="stgr_block stgr_seq stgr_content">SEQUENCE</div>
             
-            <div class="stgr_loop">
-                <div class="stgr_condition">WHILE CONDITION</div>
+            <div class="stgr_block stgr_loop">
+                <div class="stgr_condition stgr_content">WHILE CONDITION</div>
                 <div class="stgr_loop-body">
-                    <div class="stgr_sub">
-                        <div class="stgr_sub-inner">SUBROUTINE</div>
+                    <div class="stgr_block stgr_sub">
+                        <div class="stgr_sub-inner stgr_content">SUBROUTINE</div>
                     </div>
                     <div class="stgr_grpend"></div>
                 </div>
                 
             </div> <!-- end of while -->
             
-            <div class="stgr_seq">SEQUENCE</div>
+            <div class="stgr_block stgr_seq stgr_content">SEQUENCE</div>
             
-            <div class="stgr_loop">
+            <div class="stgr_block stgr_loop">
                 <div class="stgr_loop-body">
-                    <div class="stgr_seq">SEQUENCE</div>
+                    <div class="stgr_seq stgr_content">SEQUENCE</div>
                     <div class="stgr_grpend"></div>
                 </div>
-                <div class="stgr_condition">REPEAT CONDITION</div> 
+                <div class="stgr_condition stgr_content">REPEAT CONDITION</div> 
             </div> <!-- end of repeat -->
             
-            <div class="stgr_seq">SEQUENCE</div>
+            <div class="stgr_block stgr_seq stgr_content">SEQUENCE</div>
             
-            <div class="stgr_if">
-                <div class="stgr_switch-condition">IF CONDITION</div>
+            <div class="stgr_block stgr_branch">
+                <div class="stgr_condition stgr_content">IF CONDITION</div>
                 
                 <div class="stgr_switch-body">
                     <div class="stgr_column">
                         <div class="stgr_case">Y</div>
-                        <div class="stgr_seq">SEQUENCE</div>
+                        <div class="stgr_seq stgr_content">SEQUENCE</div>
                         <div class="stgr_grpend"></div>
                     </div>
                     <div class="stgr_column">
-                        <div class="stgr_case stgr_case-default">N</div>
-                        <div class="stgr_empty">EMPTY</div>
+                        <div class="stgr_case">N</div>
+                        <div class="stgr_empty stgr_content">EMPTY</div>
                         <div class="stgr_grpend"></div>
                     </div>
                 </div>
             </div>
             
-           <div class="stgr_if">
-                <div class="stgr_switch-condition">SWEETCH CONDITION</div>
+           <div class="stgr_block stgr_branch">
+                <div class="stgr_condition stgr_content">SWEETCH CONDITION</div>
                 
                 <div class="stgr_switch-body">
                     <div class="stgr_column">
                         <div class="stgr_case">1</div>
-                        <div class="stgr_seq">SEQUENCE</div>
+                        <div class="stgr_seq stgr_content">SEQUENCE</div>
                         <div class="stgr_grpend"></div>
                     </div>
                     <div class="stgr_column">
                         <div class="stgr_case">2</div>
-                        <div class="stgr_seq">SEQUENCE</div>
+                        <div class="stgr_seq stgr_content">SEQUENCE</div>
                         <div class="stgr_grpend"></div>
                     </div>
                     <div class="stgr_column">
                         <div class="stgr_case">3</div>
-                        <div class="stgr_seq">SEQUENCE</div>
+                        <div class="stgr_seq stgr_content">SEQUENCE</div>
                         <div class="stgr_grpend"></div>
                     </div>
                     <div class="stgr_column">
-                        <div class="stgr_case stgr_case-default">default</div>
+                        <div class="stgr_case">default</div>
                         <div class="stgr_empty">EMPTY</div>
                         <div class="stgr_grpend"></div>
                     </div>
                 </div>
             </div>                
-            
-            <div class="stgr_seq">SEQUENCE</div>
+   
+            <div class="stgr_block stgr_seq stgr_content">SEQUENCE</div>
                  
+        </div> <!-- procedure 1 -->
+        
+        <p></p>
+        
+        
+        <div class="procedure">
+            <div class="stgr_block stgr_branch">
+                <div class="stgr_condition stgr_content">IF CONDITION</div>
+                
+                <div class="stgr_switch-body">
+                    <div class="stgr_column">
+                        <div class="stgr_case">Y</div>
+                        
+                                    <div class="stgr_block stgr_branch">
+                                        <div class="stgr_condition stgr_content stgr_content">IF CONDITION</div>
+
+                                        <div class="stgr_switch-body">
+                                            <div class="stgr_column">
+                                                <div class="stgr_case">Y</div>
+                                                    
+                                                        <div class="stgr_block stgr_branch">
+                                                            <div class="stgr_condition stgr_content">IF CONDITION</div>
+
+                                                            <div class="stgr_switch-body">
+                                                                <div class="stgr_column">
+                                                                    <div class="stgr_case">Y</div>
+                                                                    <div class="stgr_seq stgr_content">SEQUENCE</div>
+                                                                    <div class="stgr_grpend"></div>
+                                                                </div>
+                                                                <div class="stgr_column">
+                                                                    <div class="stgr_case">N</div>
+                                                                    <div class="stgr_empty">EMPTY</div>
+                                                                    <div class="stgr_grpend"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    
+                                                <div class="stgr_grpend"></div>
+                                            </div>
+                                            <div class="stgr_column">
+                                                <div class="stgr_case">N</div>
+                                                <div class="stgr_empty">EMPTY</div>
+                                                <div class="stgr_grpend"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                        
+                        <div class="stgr_grpend"></div>
+                    </div>
+                    <div class="stgr_column">
+                        <div class="stgr_case">N</div>
+                        <div class="stgr_empty">EMPTY</div>
+                        <div class="stgr_grpend"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>
