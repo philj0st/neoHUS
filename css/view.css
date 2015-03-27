@@ -12,22 +12,36 @@ NeoHUS Struktogrammer CSS for all the blocks
 */
 
 
+
+/*** ***/
+
 .procedure {
     max-width: 600px;
-    border: 1px solid black;
+    border: 2px solid black;
 }
+
+.stgr_block {
+    
+}
+
+.stgr_content {
+    
+}
+
 
 /*** Sequence Blocks ***************************/
 
 .stgr_seq {
-    border: 1px solid black;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
     padding: 10px;
 }
 
 /*** Subroutine calls **************************/
 
 .stgr_sub {
-    border: 1px solid black;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
     
 }
 
@@ -42,7 +56,8 @@ NeoHUS Struktogrammer CSS for all the blocks
 /*** loops ***********************************/
 
 .stgr_loop {
-    border: 1px solid black;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
 }
 
 .stgr_condition {
@@ -51,54 +66,93 @@ NeoHUS Struktogrammer CSS for all the blocks
 
 .stgr_loop-body {
     margin-left: 5%;
+    border: 1px solid black;
+    border-right: 0;  
 }
+
+
+
+
 
 /*** if & switch  ****************************/
 
-.stgr_if {
-   border: 1px solid black;
+.stgr_branch {
+   border-top: 1px solid black;
+   border-bottom: 1px solid black;
    width: 100%;
    
 }
 
-.stgr_switch-condition {
+stgr_branch > .stgr_condition {
     padding: 10px;
     text-align: center;
 }
 
 .stgr_switch-body {
-    //margin: 0 auto;
     display: table;
     table-layout: fixed;
     width: 100%;
+    
 }
 
 
 .stgr_column {
-
+    border-left: 1px solid black;
+    border-right: 1px solid black;
     display: table-cell;
-    width: auto;
-
-    
+    width: auto;   
 }
 
 .stgr_case {
-    border-right: 1px solid black;
-    padding: 10px;
-}
-
-.stgr_case-default {
-    border: 0;
-    text-align: right;
+    border-bottom: 1px solid black;
+    padding: 10px;   
 }
 
 /**** control elements ************************/
 
 .stgr_empty {
-    border: 1px solid black;
+    font-style: italic;
+    text-align: center;
+    font-size: 0.9em;
     padding: 10px;
 }
 
 .stgr_grpend {
     display: hidden;
+}
+
+/*** fixing borders ***************************/
+
+/* border first and last element */
+.procedure > div:first-child {
+    border-top: 0;
+}
+
+.procedure > div:first-child {
+    border-bottom: 0;
+}
+
+/* correction of border in switches and ifs */
+.stgr_switch-body > div:first-child {
+    border-left: 0;
+}
+.stgr_switch-body > div:last-child {
+    border-right: 0;
+}
+
+/* last case in switch / if  */
+.stgr_column:last-child > .stgr_case {
+    text-align: right;
+    border-bottom: 1px solid black;
+}
+
+/* while / repeat border fix */
+
+.stgr_loop > div:first-child {
+    border-top: 0;
+    
+}
+
+.stgr_loop > div:last-child {
+    border-bottom: 0;
 }
