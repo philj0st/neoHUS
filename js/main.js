@@ -25,14 +25,14 @@ function populate(items){
         var item = items[i];
         item.id = i;
         //if sequence append to last element of parent array
-        if (item.type === "stgr_seq") {
+        if (item.class === "stgr_seq") {
             item.contenteditable = "true";
             $('#'+parent.last()).append($("<div/>", item));
         //if grpend then pop the last element of the parent array
-        }else if (item.type === "stgr_grpend") {
+        }else if (item.class === "stgr_grpend") {
             parent.pop();
         //if it's nested deeper e.x after a while type then push the id of the while element to the parent array
-        }else if (["stgr_while","stgr_if","stgr_repeat","stgr_case"].indexOf(item.type) !== -1) {
+        }else if (["stgr_while","stgr_if","stgr_repeat","stgr_case"].indexOf(item.class) !== -1) {
             $('#'+parent.last()).append($("<div/>", item));
             parent.push(item.id);
         };
@@ -65,20 +65,20 @@ $('.new_view').on('click', function(){
     items = [
     {
         text:"Hardcoded Datastructure until we can import from file",
-        type:"stgr_seq"
+        class:"stgr_seq"
     },{
         text:"only sequences for the beginning",
-        type:"stgr_if"
+        class:"stgr_if"
     },{
         text:"let's do an initial commit",
-        type:"stgr_seq"
+        class:"stgr_seq"
     },{
         text:"enough dummy data now",
-        type:"stgr_grpend"
+        class:"stgr_grpend"
     },
     {
         text:"on root lvl",
-        type:"stgr_seq"
+        class:"stgr_seq"
     }
     ];
     drawView();
@@ -134,7 +134,9 @@ function changeText (id, text) {
 * @return The index of the generated structure
 */
 function addItem(type, index){
-    
+    if (typeof index !== "number"){
+        index = parseInt(index);
+    }
     console.log("Add Item");
     if (typeof index === "undefined" || index > items.length){
         index = items.length;
@@ -143,56 +145,56 @@ function addItem(type, index){
     var insert = [];
     switch (type){
         case "stgr_seq":
-            insert = [{type:"stgr_seq",text:"Test"}
+            insert = [{class:"stgr_seq",text:"Test"}
                      ];
             break;
             
         case "stgr_if":
-            insert = [{type:"stgr_if",text:"Cond"},
-                      {type:"stgr_empty",text:""},
-                      {type:"stgr_grpend",text:""},
-                      {type:"stgr_empty",text:""},
-                      {type:"stgr_grpend",text:""}
+            insert = [{class:"stgr_if",text:"Cond"},
+                      {class:"stgr_empty",text:""},
+                      {class:"stgr_grpend",text:""},
+                      {class:"stgr_empty",text:""},
+                      {class:"stgr_grpend",text:""}
                      ];
             break;
         
         case "strg_while":
-            insert = [{type:"stgr_while",text:""},
-                      {type:"stgr_empty",text:""},
-                      {type:"stgr_grpend",text:""}
+            insert = [{class:"stgr_while",text:""},
+                      {class:"stgr_empty",text:""},
+                      {class:"stgr_grpend",text:""}
                      ];
             break;
             
         case "strg_repeat":
-            insert = [{type:"stgr_repeat",text:""},
-                      {type:"stgr_empty",text:""},
-                      {type:"stgr_grpend",text:""}
+            insert = [{class:"stgr_repeat",text:""},
+                      {class:"stgr_empty",text:""},
+                      {class:"stgr_grpend",text:""}
                      ];
             break;
             
         case "strg_switch":
-            insert = [{type:"stgr_switch",text:""},
-                      {type:"stgr_case",text:""},
-                      {type:"stgr_empty",text:""},
-                      {type:"stgr_grpend",text:""},
-                      {type:"stgr_grpend",text:""}
+            insert = [{class:"stgr_switch",text:""},
+                      {class:"stgr_case",text:""},
+                      {class:"stgr_empty",text:""},
+                      {class:"stgr_grpend",text:""},
+                      {class:"stgr_grpend",text:""}
                      ];
             break;
             
         case "strg_case":
-            insert = [{type:"stgr_case",text:""},
-                      {type:"stgr_empty",text:""},
-                      {type:"stgr_grpend",text:""}
+            insert = [{class:"stgr_case",text:""},
+                      {class:"stgr_empty",text:""},
+                      {class:"stgr_grpend",text:""}
                      ];
             break;    
             
         case "strg_sub":
-            insert = [{type:"stgr_seq",text:""}
+            insert = [{class:"stgr_seq",text:""}
                      ];
             break;
         
         default:
-            insert = [{type:"stgr_empty",text:""}];
+            insert = [{class:"stgr_empty",text:""}];
             break;
     }
     //Loop through the elements of insert and inject them into items
@@ -287,43 +289,50 @@ function handleFileSelect(evt) {
  * @returns {Array|parseSTG.parseArray}
  */
 function parseSTG(byte_result, text_result) {    
-    var ProcStart;
-    var ProcName;
-    var Index = 0;
     var parseArray = [];
+    if (byte_result.constructor === Array && typeof text_result === "string"){
+        var ProcStart;
+        var ProcName;
+        var Index = 0;
 
-    //Match the procedure name
-    var ValidStrings = text_result.match(/[a-zA-Z0-9_-]{2,}/g);
-    ProcName = ValidStrings[2];
-    console.log('Procedure Name: ' + ProcName);
+        //Match the procedure name
+        var ValidStrings = text_result.match(/[a-zA-Z0-9_-]{2,}/g);
+        ProcName = ValidStrings[2];
+        console.log('Procedure Name: ' + ProcName);
 
-    // Find the beginning of the Procedure
-    for (var i = 0; i < byte_result.length; i++) {
-        if (byte_result[i] === 02 && byte_result[i + 1] === 14) {
-            Index = i + 2;
-            break;
-        }
-    }
-
-    //Fill the STG Array with data
-    while (Index < byte_result.length) {
-        if (byte_result[Index] == 06) {
-            //function hex2dez(h) {return parseInt(h,16);}
-            var length = parseInt(byte_result[Index + 1], 16);
-            var tempString = '';
-            for (i = Index + 2; i < Index + length + 2; i++) {
-                tempString += text_result.charAt(i);
+        // Find the beginning of the Procedure
+        for (var i = 0; i < byte_result.length; i++) {
+            if (byte_result[i] === 02 && byte_result[i + 1] === 14) {
+                Index = i + 2;
+                break;
             }
-            parseArray.push(tempString);
-            Index += (length + 2);
-        } else {
-            Index++;
         }
+
+        //Fill the STG Array with data
+        while (Index < byte_result.length) {
+            if (byte_result[Index] == 06) {
+                //function hex2dez(h) {return parseInt(h,16);}
+                var length = parseInt(byte_result[Index + 1], 16);
+                var tempString = '';
+                for (i = Index + 2; i < Index + length + 2; i++) {
+                    tempString += text_result.charAt(i);
+                }
+                parseArray.push(tempString);
+                Index += (length + 2);
+            } else {
+                Index++;
+            }
+        }
+        console.log('Returning the array');
+        console.log(parseArray.join(' .:. '));
     }
-    console.log('Returning the array');
-    console.log(parseArray.join(' .:. '));
+    else {
+        console.log("Passed the wrong type as parameters!");
+        //return an empty array
+    }
     return parseArray;
 }
+
 
 /**
  * @syntax parse_structure(array[string1, string2, ...])
@@ -338,41 +347,41 @@ function parse_structure(stg_array){
     for (var i=3; i < stg_array.length; i++){
         switch (stg_array[i]){
             case "OT_STGRSEQ":
-                items.splice(items.length, 0, {type:"stgr_seq", text: stg_array[i+1]});
+                items.splice(items.length, 0, {class:"stgr_seq", text: stg_array[i+1]});
                 i+=1;
                 break;
                 
             case "OT_STGRSUB":
-                items.splice(items.length, 0, {type:"stgr_sub", text: stg_array[i+1]});
+                items.splice(items.length, 0, {class:"stgr_sub", text: stg_array[i+1]});
                 i+=1;
                 break;
             
             case "OT_STGRIF":
-                items.splice(items.length, 0, {type:"stgr_if",text:stg_array[i+1]});
+                items.splice(items.length, 0, {class:"stgr_if",text:stg_array[i+1]});
                 i+=1;
                 break;
             
             case "OT_STGRWHILE":
-                items.splice(items.length, 0, {type:"stgr_while",text:stg_array[i+1]});
+                items.splice(items.length, 0, {class:"stgr_while",text:stg_array[i+1]});
                 i+=1;
                 break;
             
             case "GRPEND":
-                items.splice(items.length, 0, {type:"stgr_grpend",text:""});
+                items.splice(items.length, 0, {class:"stgr_grpend",text:""});
                 break;
                 
             case "OT_STGRREPEAT":
-                items.splice(items.length, 0, {type:"stgr_repeat",text:stg_array[i+1]});
+                items.splice(items.length, 0, {class:"stgr_repeat",text:stg_array[i+1]});
                 i+=1;
                 break;
             
             case "OT_STGRCASE":
-                items.splice(items.length, 0, {type:"stgr_switch",text:stg_array[i+1]});
+                items.splice(items.length, 0, {class:"stgr_switch",text:stg_array[i+1]});
                 i+=1;
                 break;
                 
             default:
-                items.splice(items.length, 0, {type:"stgr_case",text:stg_array[i]});
+                items.splice(items.length, 0, {class:"stgr_case",text:stg_array[i]});
                 break;
             
         }
@@ -391,7 +400,7 @@ function checkStructure(){
     for (var i = 0; i < items.length; i++){
         if (items[i].type==="stgr_while"||items[i].type==="stgr_if"||items[i].type==="stgr_repeat"||items[i].type==="stgr_case"){
             if (items[i+1].type==="stgr_grpend"){    
-                items.splice(items.length, 0, {type:"stgr_empty", text: ""});
+                items.splice(items.length, 0, {class:"stgr_empty", text: ""});
                 i+=1;
             }
         }
