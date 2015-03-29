@@ -26,13 +26,15 @@ function populate(items){
         item.id = i;
         //if sequence append to last element of parent array
         if (item.class === "stgr_seq") {
-            item.contenteditable = "true";
+        	if (item.class.indexOf("stgr_content") > -1) {
+        		item.contenteditable = "true";
+        	};
             $('#'+parent.last()).append($("<div/>", item));
         //if grpend then pop the last element of the parent array
         }else if (item.class === "stgr_grpend") {
             parent.pop();
         //if it's nested deeper e.x after a while type then push the id of the while element to the parent array
-        }else if (["stgr_while","stgr_if","stgr_repeat","stgr_case"].indexOf(item.class) !== -1) {
+        }else if (["stgr_while","stgr_if","stgr_repeat","stgr_case", "stgr_sub"].indexOf(item.class) !== -1) {
             $('#'+parent.last()).append($("<div/>", item));
             parent.push(item.id);
         };
@@ -74,13 +76,13 @@ $('.new_view').on('click', function(){
     items = [
     {
         text:"Hardcoded Datastructure until we can import from file",
-        class:"stgr_seq"
+        class:"stgr_seq stgr_content"
     },{
         text:"only sequences for the beginning",
         class:"stgr_if"
     },{
         text:"let's do an initial commit",
-        class:"stgr_seq"
+        class:"stgr_seq stgr_content"
     },{
         text:"enough dummy data now",
         class:"stgr_grpend"
