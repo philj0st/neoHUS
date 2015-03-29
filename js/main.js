@@ -52,12 +52,21 @@ function registerEventhandler(){
     });
 }
 
+function enableItemAddition(type){
+    //#TODO implemented handler only for stgr_seq since we don't know yet which types/classes will be eligible to get stuff appended to
+    $('.stgr_seq').on('click', function (){
+        console.log("add "+type+" after "+$(this).attr('id'));
+        addItem(type, +$(this).attr('id'));
+        drawView();
+    });
+}
+
 /**
 *   1.1 Menu Click-Eventhandler
 */
 $('.addItem').on('click', function(){
-    addItem(this.id,items.length);
-    drawView();
+    //register event handler for each div eligible to get another div appended to
+    enableItemAddition(this.id);
 });
 
 $('.new_view').on('click', function(){
@@ -197,10 +206,8 @@ function addItem(type, index){
             insert = [{class:"stgr_empty",text:""}];
             break;
     }
-    //Loop through the elements of insert and inject them into items
-    for (var i = 0; i<insert.length; i++){
-        items.splice(index+i,0,insert[i]);
-    }
+    //nifty way to merge arrays at specific index
+    Array.prototype.splice.apply(items, [index+1,0].concat(insert));
     //return its index
     return (index);
 }
