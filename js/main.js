@@ -6,6 +6,8 @@ function drawView(){
      * This function deletes the display and rebuilds it
      */
     $('#content').empty();
+    // https://en.wikipedia.org/wiki/%3F%3a
+    // The ternary operator treats 0 as false and everything <0 as true
     checkStructure()?console.log("Structure Clearing failed"):console.log("Structure is clear");
     populate(items);
     registerEventhandler();
@@ -423,5 +425,6 @@ function checkStructure(){
         console.log("Error while trying to tidy up the structur: " + err.message);
         errorState = -2;
     }
+    console.log(errorState);
     return errorState;
 }
