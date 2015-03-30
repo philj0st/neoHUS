@@ -403,16 +403,25 @@ function parse_structure(stg_array){
 
 /**
  * @description Loops through the items Array and checks if some empty structures need to be inserted (for example between a stgr_case and a stgr_grpend object)
+ * @description Returns 0 on success, -1 on fail, and -2 on error
  * @returns {Integer}
  */
 function checkStructure(){
-    for (var i = 0; i < items.length; i++){
-        if (items[i].type==="stgr_while"||items[i].type==="stgr_if"||items[i].type==="stgr_repeat"||items[i].type==="stgr_case"){
-            if (items[i+1].type==="stgr_grpend"){    
-                items.splice(items.length, 0, {class:"stgr_empty", text: ""});
-                i+=1;
+    var errorState = -1;
+    try {
+        for (var i = 0; i < items.length; i++){
+            if (items[i].type==="stgr_while"||items[i].type==="stgr_if"||items[i].type==="stgr_repeat"||items[i].type==="stgr_case"){
+                if (items[i+1].type==="stgr_grpend"){    
+                    items.splice(items.length, 0, {class:"stgr_empty", text: ""});
+                    i+=1;
+                }
             }
-        }
-    };
-    return 0;
+        };
+        errorState = 0;
+    }
+    catch (err){
+        console.log("Error while trying to tidy up the structur: " + err.message);
+        errorState = -2;
+    }
+    return errorState;
 }
