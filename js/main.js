@@ -16,14 +16,13 @@ function drawView(){
 /**
  * @description Loops through an array of Objects and generates nested HTML divs in the content class
  * @param {Array|JSON Objects} items
- * @param parent array used for recursive loop
  * @returns {undefined}
  */
 function populate(items){
     var parent = ["content"];
     console.log("Populating...");
     //loop through objects in items and populate the view
-    for (i in items){
+    for (var i in items){
         var item = items[i];
         item.id = i;
         //if sequence append to last element of parent array
@@ -113,6 +112,12 @@ $('#openFileDialog').on('change', handleFileSelect);
 
 //alert
 // types = {success, warning, info, danger}
+/**
+ * 
+ * @param {string} message
+ * @param {type} type
+ * @returns {undefined}
+ */
 function displayAlert(message, type) {
     $('<div/>', {
         "class": "alert alert-" + type,
@@ -126,11 +131,11 @@ function displayAlert(message, type) {
 */
 
 /**
-* @syntax addItem(id, text)
-* @description changes the id's text to the text param
-* @param {integer} index Index at which the text should get changed
-* @param {string} text which should be added to the object at the param id
-*/
+ * @description Changes the text of the specified item
+ * @param {integer} id
+ * @param {string} text
+ * @returns {undefined}
+ */
 function changeText (id, text) {
     items[id].text = text;
     drawView();
@@ -270,7 +275,7 @@ function handleFileSelect(evt) {
 
         //Parse the reader result to a string array
         stg_array = parseSTG(byte_result, text_result);
-        if (parse_structure(stg_array) == 0){
+        if (parse_structure(stg_array) === 0){
             console.log("Parsing succesfull");
             drawView();
         }
@@ -309,7 +314,6 @@ function parseSTG(byte_result, text_result) {
         //Match the procedure name
         var ValidStrings = text_result.match(/[a-zA-Z0-9_-]{2,}/g);
         ProcName = ValidStrings[2];
-        console.log('Procedure Name: ' + ProcName);
 
         // Find the beginning of the Procedure
         for (var i = 0; i < byte_result.length; i++) {
@@ -321,7 +325,7 @@ function parseSTG(byte_result, text_result) {
 
         //Fill the STG Array with data
         while (Index < byte_result.length) {
-            if (byte_result[Index] == 06) {
+            if (byte_result[Index] === "06") {
                 //function hex2dez(h) {return parseInt(h,16);}
                 var length = parseInt(byte_result[Index + 1], 16);
                 var tempString = '';
@@ -334,8 +338,6 @@ function parseSTG(byte_result, text_result) {
                 Index++;
             }
         }
-        console.log('Returning the array');
-        console.log(parseArray.join(' .:. '));
     }
     else {
         console.log("Passed the wrong type as parameters!");
@@ -425,6 +427,5 @@ function checkStructure(){
         console.log("Error while trying to tidy up the structur: " + err.message);
         errorState = -2;
     }
-    console.log(errorState);
     return errorState;
 }
