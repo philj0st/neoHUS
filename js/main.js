@@ -6,6 +6,8 @@ function drawView(){
      * This function deletes the display and rebuilds it
      */
     $('#content').empty();
+    // https://en.wikipedia.org/wiki/%3F%3a
+    // The ternary operator treats 0 as false and everything <0 as true
     checkStructure()?console.log("Structure Clearing failed"):console.log("Structure is clear");
     populate(items);
     registerEventhandler();
@@ -14,25 +16,26 @@ function drawView(){
 /**
  * @description Loops through an array of Objects and generates nested HTML divs in the content class
  * @param {Array|JSON Objects} items
- * @param parent array used for recursive loop
  * @returns {undefined}
  */
 function populate(items){
     var parent = ["content"];
     console.log("Populating...");
     //loop through objects in items and populate the view
-    for (i in items){
+    for (var i in items){
         var item = items[i];
         item.id = i;
         //if sequence append to last element of parent array
         if (item.class === "stgr_seq") {
-            item.contenteditable = "true";
+        	if (item.class.indexOf("stgr_content") > -1) {
+        		item.contenteditable = "true";
+        	};
             $('#'+parent.last()).append($("<div/>", item));
         //if grpend then pop the last element of the parent array
         }else if (item.class === "stgr_grpend") {
             parent.pop();
         //if it's nested deeper e.x after a while type then push the id of the while element to the parent array
-        }else if (["stgr_while","stgr_if","stgr_repeat","stgr_case"].indexOf(item.class) !== -1) {
+        }else if (["stgr_while","stgr_if","stgr_repeat","stgr_case", "stgr_sub"].indexOf(item.class) !== -1) {
             $('#'+parent.last()).append($("<div/>", item));
             parent.push(item.id);
         };
@@ -52,12 +55,21 @@ function registerEventhandler(){
     });
 }
 
+function enableItemAddition(type){
+    //#TODO implemented handler only for stgr_seq since we don't know yet which types/classes will be eligible to get stuff appended to
+    $('.stgr_seq').on('click', function (){
+        console.log("add "+type+" after "+$(this).attr('id'));
+        addItem(type, +$(this).attr('id'));
+        drawView();
+    });
+}
+
 /**
 *   1.1 Menu Click-Eventhandler
 */
 $('.addItem').on('click', function(){
-    addItem(this.id,items.length);
-    drawView();
+    //register event handler for each div eligible to get another div appended to
+    enableItemAddition(this.id);
 });
 
 $('.new_view').on('click', function(){
@@ -65,13 +77,13 @@ $('.new_view').on('click', function(){
     items = [
     {
         text:"Hardcoded Datastructure until we can import from file",
-        class:"stgr_seq"
+        class:"stgr_seq stgr_content"
     },{
         text:"only sequences for the beginning",
         class:"stgr_if"
     },{
         text:"let's do an initial commit",
-        class:"stgr_seq"
+        class:"stgr_seq stgr_content"
     },{
         text:"enough dummy data now",
         class:"stgr_grpend"
@@ -100,6 +112,12 @@ $('#openFileDialog').on('change', handleFileSelect);
 
 //alert
 // types = {success, warning, info, danger}
+/**
+ * 
+ * @param {string} message
+ * @param {type} type
+ * @returns {undefined}
+ */
 function displayAlert(message, type) {
     $('<div/>', {
         "class": "alert alert-" + type,
@@ -113,11 +131,11 @@ function displayAlert(message, type) {
 */
 
 /**
-* @syntax addItem(id, text)
-* @description changes the id's text to the text param
-* @param {integer} index Index at which the text should get changed
-* @param {string} text which should be added to the object at the param id
-*/
+ * @description Changes the text of the specified item
+ * @param {integer} id
+ * @param {string} text
+ * @returns {undefined}
+ */
 function changeText (id, text) {
     items[id].text = text;
     drawView();
@@ -197,10 +215,8 @@ function addItem(type, index){
             insert = [{class:"stgr_empty",text:""}];
             break;
     }
-    //Loop through the elements of insert and inject them into items
-    for (var i = 0; i<insert.length; i++){
-        items.splice(index+i,0,insert[i]);
-    }
+    //nifty way to merge arrays at specific index
+    Array.prototype.splice.apply(items, [index+1,0].concat(insert));
     //return its index
     return (index);
 }
@@ -259,7 +275,7 @@ function handleFileSelect(evt) {
 
         //Parse the reader result to a string array
         stg_array = parseSTG(byte_result, text_result);
-        if (parse_structure(stg_array) == 0){
+        if (parse_structure(stg_array) === 0){
             console.log("Parsing succesfull");
             drawView();
         }
@@ -298,7 +314,6 @@ function parseSTG(byte_result, text_result) {
         //Match the procedure name
         var ValidStrings = text_result.match(/[a-zA-Z0-9_-]{2,}/g);
         ProcName = ValidStrings[2];
-        console.log('Procedure Name: ' + ProcName);
 
         // Find the beginning of the Procedure
         for (var i = 0; i < byte_result.length; i++) {
@@ -310,7 +325,7 @@ function parseSTG(byte_result, text_result) {
 
         //Fill the STG Array with data
         while (Index < byte_result.length) {
-            if (byte_result[Index] == 06) {
+            if (byte_result[Index] === "06") {
                 //function hex2dez(h) {return parseInt(h,16);}
                 var length = parseInt(byte_result[Index + 1], 16);
                 var tempString = '';
@@ -323,8 +338,6 @@ function parseSTG(byte_result, text_result) {
                 Index++;
             }
         }
-        console.log('Returning the array');
-        console.log(parseArray.join(' .:. '));
     }
     else {
         console.log("Passed the wrong type as parameters!");
@@ -394,16 +407,25 @@ function parse_structure(stg_array){
 
 /**
  * @description Loops through the items Array and checks if some empty structures need to be inserted (for example between a stgr_case and a stgr_grpend object)
+ * @description Returns 0 on success, -1 on fail, and -2 on error
  * @returns {Integer}
  */
 function checkStructure(){
-    for (var i = 0; i < items.length; i++){
-        if (items[i].type==="stgr_while"||items[i].type==="stgr_if"||items[i].type==="stgr_repeat"||items[i].type==="stgr_case"){
-            if (items[i+1].type==="stgr_grpend"){    
-                items.splice(items.length, 0, {class:"stgr_empty", text: ""});
-                i+=1;
+    var errorState = -1;
+    try {
+        for (var i = 0; i < items.length; i++){
+            if (items[i].type==="stgr_while"||items[i].type==="stgr_if"||items[i].type==="stgr_repeat"||items[i].type==="stgr_case"){
+                if (items[i+1].type==="stgr_grpend"){    
+                    items.splice(items.length, 0, {class:"stgr_empty", text: ""});
+                    i+=1;
+                }
             }
-        }
-    };
-    return 0;
+        };
+        errorState = 0;
+    }
+    catch (err){
+        console.log("Error while trying to tidy up the structur: " + err.message);
+        errorState = -2;
+    }
+    return errorState;
 }
