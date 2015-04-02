@@ -1,6 +1,46 @@
 /**
 *   1.GUI Core functions
 */
+
+/**
+ * @description Takes a STG Array as input and calculates the Maximum Numbers of parallel columns (the maximum width)
+ * @param {STG Array} array
+ * @returns {Number} -1 = Fail; >0 Max Columns
+ */
+
+function findMaxColumns(array){
+    var columns = -1;
+    if (array.constructor === Array){
+        var num_grpend = 0;
+        columns = 1;
+        var temp_columns = 1;
+        for (var i = 0; i < array.length; i++){
+            if (array[i].class === "stgr_if"){
+                temp_columns+=1;
+                num_grpend+=2;
+            }
+            if (array[i].class === "stgr_while"||array[i].class === "stgr_repeat"||array[i].class === "stgr_switch"){
+                num_grpend++;
+            }
+            if (array[i].class === "stgr_case"){
+                temp_columns++;
+                num_grpend++;
+            }
+            if (array[i].class === "stgr_grpend"){
+                num_grpend--;
+            }
+            if (num_grpend===0){
+                if (temp_columns>columns) columns=temp_columns;
+                temp_columns = 1;
+            }
+        }
+    }
+    else {
+        console.log("Passed wrong type of variable");
+    }
+    return columns;
+}
+
 function drawView(){
     /*
      * This function deletes the display and rebuilds it
@@ -10,6 +50,7 @@ function drawView(){
     // The ternary operator treats 0 as false and everything <0 as true
     checkStructure()?console.log("Structure Clearing failed"):console.log("Structure is clear");
     populate(items);
+    console.log(findMaxColumns(items));
     registerEventhandler();
 }
 
@@ -20,6 +61,12 @@ function drawView(){
  */
 function populate(items){
     var parent = ["content"];
+    // Debug: Log items array
+    var out = [];
+    for (var i in items){
+        out.push('{class: "'+items[i].class+'", text: "'+items[i].text+'"},');
+    }
+    console.log(out.join(""));
     console.log("Populating...");
     //loop through objects in items and populate the view
     for (var i in items){
