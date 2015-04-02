@@ -1,4 +1,7 @@
-/**
+//Global blank data array
+items = [];
+
+/*
 *   1.GUI Core functions
 */
 
@@ -7,7 +10,6 @@
  * @param {STG Array} array
  * @returns {Number} -1 = Fail; >0 Max Columns
  */
-
 function findMaxColumns(array){
     var columns = -1;
     if (array.constructor === Array){
@@ -36,9 +38,38 @@ function findMaxColumns(array){
         }
     }
     else {
-        console.log("Passed wrong type of variable");
+        console.log("Passed the wrong type of variable");
     }
     return columns;
+}
+
+/**
+ * @description This function searches for the closing grpend of the object determined by the passed index. If no valid object is found at the passed index it takes the next valid object that follows
+ * @param {Integer} indexObj
+ * @returns {Integer} Returns the index of the closing grpend
+ */
+function findEnd(indexObj){
+    var end = -1;
+    if (typeof indexObj === "number" && indexObj > -1){
+        //check if the passed index parses to a valid object
+        while (["stgr_if","stgr_while","stgr_repeat","stgr_switch"].indexOf(items[indexObj].class)===-1 || indexObj>items.length){
+            indexObj++;
+        }
+        var num_grpend = 0;
+        for (var i = indexObj; i < items.length; i++){
+            if (items[i].class==="stgr_if"){
+                num_grpend+=2;
+            }
+            if (items[i].class==="stgr_case"){
+                num_grpend++;
+            }
+            
+        }
+    }
+    else {
+        console.log("Please pass a valid index");
+    }
+    return end;
 }
 
 function drawView(){
@@ -268,10 +299,6 @@ function addItem(type, index){
     return (index);
 }
 
-//Global blank data array
-items = [];
-
-
 /**
 *   3. Extend JS Language to our needs. #Bend to my will Java Script! 
 */
@@ -392,7 +419,6 @@ function parseSTG(byte_result, text_result) {
     }
     return parseArray;
 }
-
 
 /**
  * @syntax parse_structure(array[string1, string2, ...])

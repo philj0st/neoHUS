@@ -35,23 +35,23 @@
                 <div class="col-md-12">
                   <div class="panel panel-primary">
                     <div class="panel-heading">
-                      <h3 class="panel-title">Procedure 
+                        <h3 class="panel-title">Procedure </h3>
                         <div class="btn-group">
-                          <button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-folder-open-o"></i>
+                          <button type="button" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-folder-open-o"></i>
                           </button>
                           <ul class="dropdown-menu" role="menu">
                             <li><a id="openFile" href="#">open file</a></li>
                           </ul>
                         </div>
                         <div class="btn-group">
-                          <button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-floppy-o"></i>
+                          <button type="button" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-floppy-o"></i>
                           </button>
                           <ul class="dropdown-menu" role="menu">
                             <li><a id="saveToJson">.json</a></li>
                           </ul>
                         </div>
                         <div class="btn-group">
-                          <button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-plus-circle"></i>
+                          <button type="button" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus-circle"></i>
                           </button>
                           <ul class="dropdown-menu" role="menu">
                             <li><a id="stgr_seq" class="addItem"><i class="fa fa-tasks"></i>&emsp;Sequence</a></li>
@@ -67,14 +67,14 @@
                             </button>
                         </div>
                         <i class="fa fa-times-circle pull-right"></i>
-                      </h3> 
                     </div>
                     <div id="content" class="panel-body">
                     </div>
                   </div>
                 </div>
                 <form id="fileInput">
-                  <input id="openFileDialog" type="file" id="files" name="files[]" accept=".json, .txt, .stg" />
+                    <!-- The next line throws an error when using the html5 validator, false positive!:  http://stackoverflow.com/questions/25391613/w3c-validation-error-if-input-accept-attribute-contains-mime-type-list-->
+                    <input id="openFileDialog" type="file" id="files" name="files[]" accept=".json, .txt, .stg" />
                 </form>
               </div>
               <div class="row">
