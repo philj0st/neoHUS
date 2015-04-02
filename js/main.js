@@ -57,13 +57,32 @@ function findEnd(indexObj){
         }
         var num_grpend = 0;
         for (var i = indexObj; i < items.length; i++){
-            if (items[i].class==="stgr_if"){
-                num_grpend+=2;
+            switch (items[i].class){
+                case "stgr_if":
+                    num_grpend+=2;
+                    break;
+                case "stgr_case":
+                    num_grpend++;
+                    break;
+                case "stgr_while":
+                    num_grpend++;
+                    break;
+                case "stgr_repeat":
+                    num_grpend++;
+                    break;
+                case "stgr_grpend":
+                    num_grpend--;
+                    break;
             }
-            if (items[i].class==="stgr_case"){
-                num_grpend++;
+            if (items[i].class === "stgr_switch"&&items[i+1].class === "stgr_empty"){
+                //it's an empty switch, so break the for on the next iteration and set the end-index to the "stgr_empty" object
+                end = i+1;
+                i = items.length;
             }
-            
+            if (num_grpend === 0){
+                end = i;
+                i = items.length;
+            }
         }
     }
     else {
@@ -76,12 +95,13 @@ function drawView(){
     /*
      * This function deletes the display and rebuilds it
      */
+    $(".panel-title").html(items[0].text);
     $('#content').empty();
     // https://en.wikipedia.org/wiki/%3F%3a
     // The ternary operator treats 0 as false and everything <0 as true
     checkStructure()?console.log("Structure Clearing failed"):console.log("Structure is clear");
     populate(items);
-    console.log(findMaxColumns(items));
+    console.log("Maximum Columns: " + findMaxColumns(items));
     registerEventhandler();
 }
 
@@ -348,6 +368,8 @@ function handleFileSelect(evt) {
         }
 
         //Parse the reader result to a string array
+        //ensure items is empty
+        items = [];
         stg_array = parseSTG(byte_result, text_result);
         if (parse_structure(stg_array) === 0){
             console.log("Parsing succesfull");
@@ -388,6 +410,7 @@ function parseSTG(byte_result, text_result) {
         //Match the procedure name
         var ValidStrings = text_result.match(/[a-zA-Z0-9_-]{2,}/g);
         ProcName = ValidStrings[2];
+        items[0] = {class:"Procedure Name",text:ProcName};
 
         // Find the beginning of the Procedure
         for (var i = 0; i < byte_result.length; i++) {
@@ -427,7 +450,6 @@ function parseSTG(byte_result, text_result) {
  * @param {array} stg_array An array of strings
  */
 function parse_structure(stg_array){
-    items = [];
     var state = 1;
     //Begin on index 3, because we don't need the Info before
     for (var i=3; i < stg_array.length; i++){

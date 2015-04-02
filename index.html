@@ -5,7 +5,9 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <!-- Not allowed in valid documents https://wiki.whatwg.org/wiki/PragmaExtensions -->
+  <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+  
   <title>neoHUS</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -74,7 +76,7 @@
                 </div>
                 <form id="fileInput">
                     <!-- The next line throws an error when using the html5 validator, false positive!:  http://stackoverflow.com/questions/25391613/w3c-validation-error-if-input-accept-attribute-contains-mime-type-list-->
-                    <input id="openFileDialog" type="file" id="files" name="files[]" accept=".json, .txt, .stg" />
+                    <input id="openFileDialog" type="file" name="files[]" accept=".json, .txt, .stg" />
                 </form>
               </div>
               <div class="row">
