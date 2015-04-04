@@ -91,6 +91,43 @@ function findEnd(indexObj){
     return end;
 }
 
+/* 
+ * All Functions related to drawing the svg objects
+ * 
+ * #TODO The linechecking if the text of an SVG-Object overflows will be before the construct-function -> Need to implement that
+ * #TODO Decide on the Text-Rowspacing, I want to use a predefined default which will be multiplied
+ */
+
+
+
+/**
+ * @description This function generates an inline SVG object, returns an empty string on error
+ * @param {Number} x0 The origin x coordinate of the object
+ * @param {Number} y0 The origin y coordinate of the object
+ * @param {Number} w The width of the object
+ * @param {Number} h The height of the object
+ * @param {String} text The text in the object
+ * @returns {String} The inline SVG as a HTML string
+ */
+function svgSeq(x0, y0, w, h, text){
+    var svg = "";
+    //Types are case-sensitive apparently...
+    if (typeof x0==="number"&&typeof y0 ==="number"&&typeof w==="number"&&typeof h==="number"&&typeof text==="string"){
+        //construct the rectangle
+        // "' or '" is interchangeable - I think
+        var rect = "<rect x='" + x0 + "' y='" + y0 + "' width=" + "'" + w + "' height='" + h + "' style='fill:rgb(255,255,255);stroke:rgb(0,0,0)' />";
+        //text will be 20px from the upper border (subject to change), and centered in the case of an Sequence, maybe we have to define a style guideline
+        var svg_text="<text x='" + (x0+w/2);
+        console.log(svg_text);
+    }
+    else {
+        console.log("Wrong parameters provided for svgSeq()");
+    }
+    return svg;
+}
+
+
+
 function drawView(){
     /*
      * This function deletes the display and rebuilds it
@@ -203,6 +240,10 @@ $('#openFile').on('click', function(){
 });
 
 $('#openFileDialog').on('change', handleFileSelect);
+
+$('.console_invoke').on('click', function (){
+    svgSeq(0,0,100,100,"Test");
+});
 
 /**
 *   1.2 Other GUI
