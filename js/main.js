@@ -117,8 +117,9 @@ function svgSeq(x0, y0, w, h, text){
         // "' or '" is interchangeable - I think
         var rect = "<rect x='" + x0 + "' y='" + y0 + "' width=" + "'" + w + "' height='" + h + "' style='fill:rgb(255,255,255);stroke:rgb(0,0,0)' />";
         //text will be 20px from the upper border (subject to change), and centered in the case of an Sequence, maybe we have to define a style guideline
-        var svg_text="<text x='" + (x0+w/2);
-        console.log(svg_text);
+        var svg_text="<text x='" + (x0+w/2) + "' y='" + (y0+20) + "' class='svg_seq'>" + text + "</text>";
+        svg=rect+svg_text;
+        console.log(svg);
     }
     else {
         console.log("Wrong parameters provided for svgSeq()");
@@ -127,11 +128,10 @@ function svgSeq(x0, y0, w, h, text){
 }
 
 
-
+/**
+ * @description Clears the view and rebuilds it
+ */
 function drawView(){
-    /*
-     * This function deletes the display and rebuilds it
-     */
     $(".panel-title").html(items[0].text);
     $('#content').empty();
     // https://en.wikipedia.org/wiki/%3F%3a
@@ -242,7 +242,8 @@ $('#openFile').on('click', function(){
 $('#openFileDialog').on('change', handleFileSelect);
 
 $('.console_invoke').on('click', function (){
-    svgSeq(0,0,100,100,"Test");
+    $('#content').empty();
+    $('#content').html("<svg height='1000' width='1000'>"+svgSeq(0,0,100,100,"Test")+"</svg>");
 });
 
 /**
