@@ -115,9 +115,9 @@ function svgSeq(x0, y0, w, h, text){
     if (typeof x0==="number"&&typeof y0 ==="number"&&typeof w==="number"&&typeof h==="number"&&typeof text==="string"){
         //construct the rectangle
         // "' or '" is interchangeable - I think
-        var rect = "<rect x='" + x0 + "' y='" + y0 + "' width=" + "'" + w + "' height='" + h + "' style='fill:rgb(255,255,255);stroke:rgb(0,0,0)' />";
+        var rect = "<rect x='" + x0 + "' y='" + y0 + "' width=" + "'" + w + "' height='" + h + "' class='svg_border' />";
         //text will be 20px from the upper border (subject to change), and centered in the case of an Sequence, maybe we have to define a style guideline
-        var svg_text="<text x='" + (x0+w/2) + "' y='" + (y0+20) + "' class='svg_seq'>" + text + "</text>";
+        var svg_text="<text x='" + (x0+w/2) + "' y='" + (y0+20) + "' class='svg_text'>" + text + "</text>";
         svg=rect+svg_text;
         console.log(svg);
     }
@@ -126,6 +126,174 @@ function svgSeq(x0, y0, w, h, text){
     }
     return svg;
 }
+
+/**
+ * @description This function generates an inline SVG object, returns an empty string on error
+ * @param {Number} x0 The origin x coordinate of the object
+ * @param {Number} y0 The origin y coordinate of the object
+ * @param {Number} w The width of the object
+ * @param {Number} h The height of the object
+ * @param {String} text The text in the object
+ * @returns {String} The inline SVG as a HTML string
+ */
+function svgSub(x0, y0, w, h, text){
+    var svg = "";
+    //Types are case-sensitive apparently...
+    if (typeof x0==="number"&&typeof y0 ==="number"&&typeof w==="number"&&typeof h==="number"&&typeof text==="string"){
+        //construct the rectangle
+        // "' or '" is interchangeable - I think
+        var rect = "<rect x='" + x0 + "' y='" + y0 + "' width=" + "'" + w + "' height='" + h + "' class='svg_border' />";
+        var rect_inner = "<rect x='" + (x0+10) + "' y='" + y0 + "' width=" + "'" + (w-20) + "' height='" + h + "' class='svg_border' />";
+        //text will be 20px from the upper border (subject to change), and centered in the case of an Sequence, maybe we have to define a style guideline
+        var svg_text="<text x='" + (x0+w/2) + "' y='" + (y0+20) + "' class='svg_text'>" + text + "</text>";
+        svg=rect+rect_inner+svg_text;
+        console.log(svg);
+    }
+    else {
+        console.log("Wrong parameters provided for svgSub()");
+    }
+    return svg;
+}
+
+/**
+ * @description This function generates an inline SVG object, returns an empty string on error
+ * @param {Number} x0 The origin x coordinate of the object
+ * @param {Number} y0 The origin y coordinate of the object
+ * @param {Number} w The width of the object
+ * @param {Number} h The height of the object
+ * @param {String} text The text in the object
+ * @returns {String} The inline SVG as a HTML string
+ */
+function svgEmpty(x0, y0, w, h, text){
+    var svg = "";
+    //Types are case-sensitive apparently...
+    if (typeof x0==="number"&&typeof y0 ==="number"&&typeof w==="number"&&typeof h==="number"&&typeof text==="string"){
+        //construct the rectangle
+        // "' or '" is interchangeable - I think
+        var rect = "<rect x='" + x0 + "' y='" + y0 + "' width=" + "'" + w + "' height='" + h + "' class='svg_border' />";
+        var line = "<line x1='" + (x0+w) +"' x2='" + x0 +"' y1='" + y0 + "' y2='" + (y0+h) +"' class='svg_border' />";
+        svg=rect+line;
+        console.log(svg);
+    }
+    else {
+        console.log("Wrong parameters provided for svgEmpty()");
+    }
+    return svg;
+}
+
+/**
+ * @description This function generates an inline SVG object, returns an empty string on error
+ * @param {Number} x0 The origin x coordinate of the object
+ * @param {Number} y0 The origin y coordinate of the object
+ * @param {Number} w The width of the object
+ * @param {Number} h The height of the object
+ * @param {String} text The text in the object
+ * @returns {String} The inline SVG as a HTML string
+ */
+function svgWhile(x0, y0, w, h, text){
+    var svg = "";
+    //Types are case-sensitive apparently...
+    if (typeof x0==="number"&&typeof y0 ==="number"&&typeof w==="number"&&typeof h==="number"&&typeof text==="string"){
+        //construct the rectangle
+        // "' or '" is interchangeable - I think
+        var rect = "<rect x='" + x0 + "' y='" + y0 + "' width=" + "'" + w + "' height='" + h + "' class='svg_border' />";
+        var rect_inner = "<rect x='" + (x0+30) + "' y='" + (y0+30) + "' width=" + "'" + (w-30) + "' height='" + (h-30) + "' class='svg_border' />";
+        var svg_text="<text x='" + (x0+w/2) + "' y='" + (y0+20) + "' class='svg_text'>" + text + "</text>";
+        svg=rect+rect_inner+svg_text;
+        console.log(svg);
+    }
+    else {
+        console.log("Wrong parameters provided for svgWhile()");
+    }
+    return svg;
+}
+
+/**
+ * @description This function generates an inline SVG object, returns an empty string on error
+ * @param {Number} x0 The origin x coordinate of the object
+ * @param {Number} y0 The origin y coordinate of the object
+ * @param {Number} w The width of the object
+ * @param {Number} h The height of the object
+ * @param {String} text The text in the object
+ * @returns {String} The inline SVG as a HTML string
+ */
+function svgRepeat(x0, y0, w, h, text){
+    var svg = "";
+    //Types are case-sensitive apparently...
+    if (typeof x0==="number"&&typeof y0 ==="number"&&typeof w==="number"&&typeof h==="number"&&typeof text==="string"){
+        //construct the rectangle
+        // "' or '" is interchangeable - I think
+        var rect = "<rect x='" + x0 + "' y='" + y0 + "' width=" + "'" + w + "' height='" + h + "' class='svg_border' />";
+        var rect_inner = "<rect x='" + (x0+30) + "' y='" + y0 + "' width=" + "'" + (w-30) + "' height='" + (h-30) + "' class='svg_border' />";
+        var svg_text="<text x='" + (x0+w/2) + "' y='" + (y0+h-10) + "' class='svg_text'>" + text + "</text>";
+        svg=rect+rect_inner+svg_text;
+        console.log(svg);
+    }
+    else {
+        console.log("Wrong parameters provided for svgRepeat()");
+    }
+    return svg;
+}
+
+/**
+ * @description This function generates an inline SVG object, returns an empty string on error
+ * @param {Number} x0 The origin x coordinate of the object
+ * @param {Number} y0 The origin y coordinate of the object
+ * @param {Number} w The width of the object
+ * @param {Number} h The height of the object
+ * @param {String} text The text in the object
+ * @returns {String} The inline SVG as a HTML string
+ * 
+ * #TODO Not half -> make a,b
+ */
+function svgIf(x0, y0, w, h, text){
+    var svg = "";
+    //Types are case-sensitive apparently...
+    if (typeof x0==="number"&&typeof y0 ==="number"&&typeof w==="number"&&typeof h==="number"&&typeof text==="string"){
+        //construct the rectangle
+        // "' or '" is interchangeable - I think
+        var rect = "<rect x='" + x0 + "' y='" + y0 + "' width=" + "'" + w + "' height='" + h + "' class='svg_border' />";
+        var line1 = "<line x1='" + (x0) +"' x2='" + (x0+w/2) +"' y1='" + y0 + "' y2='" + (y0+h) +"' class='svg_border' />";
+        var line2 = "<line x1='" + (x0+w) +"' x2='" + (x0+w/2) +"' y1='" + y0 + "' y2='" + (y0+h) +"' class='svg_border' />";
+        var svg_text="<text x='" + (x0+w/2) + "' y='" + (y0+20) + "' class='svg_text'>" + text + "</text>";
+        var svg_yes="<text x='" + (x0+10) + "' y='" + (y0+h-10) + "' class='svg_if'>ja</text>";
+        var svg_no="<text x='" + (x0+w-35) + "' y='" + (y0+h-10) + "' class='svg_if'>nein</text>";
+        svg=rect+line1+line2+svg_text+svg_yes+svg_no;
+        console.log(svg);
+    }
+    else {
+        console.log("Wrong parameters provided for svgIf()");
+    }
+    return svg;
+}
+
+/**
+ * @description This function generates an inline SVG object, returns an empty string on error
+ * @param {Number} x0 The origin x coordinate of the object
+ * @param {Number} y0 The origin y coordinate of the object
+ * @param {Number} w The width of the object
+ * @param {Number} h The height of the object
+ * @param {String} text The text in the object
+ * @returns {String} The inline SVG as a HTML string
+ */
+function svgSwitch(x0, y0, w, text){
+    var svg = "";
+    //Types are case-sensitive apparently...
+    if (typeof x0==="number"&&typeof y0 ==="number"&&typeof w==="number"&&typeof text==="string"){
+        //construct the rectangle
+        // "' or '" is interchangeable - I think
+        var poly = "<polygon points='" + x0 + "," + y0 + " " + (x0+w) + "," + y0 + " " + (x0+w) + "," + (y0+w/1.618) + "' class='svg_border' />";
+        var text="<text x='" + (x0+w-10) + "' y='" + (y0+20) + "' class='svg_text_switch'>" + text + "</text>";
+        svg=poly + text;
+        console.log(svg);
+    }
+    else {
+        console.log("Wrong parameters provided for svgIf()");
+    }
+    return svg;
+}
+
+
 
 
 /**
@@ -180,6 +348,7 @@ function populate(items){
 
 function clear(){
     items = [];
+    items[0] = {class:"Procedure Name",text:"Procedure"}
     drawView();
 }
 
@@ -210,6 +379,9 @@ $('.addItem').on('click', function(){
 $('.new_view').on('click', function(){
     //Load the item-array with dummy data
     items = [
+    {
+        class:"Procedure Name",
+        text:"DummyProcedure"},
     {
         text:"Hardcoded Datastructure until we can import from file",
         class:"stgr_seq stgr_content"
@@ -243,7 +415,7 @@ $('#openFileDialog').on('change', handleFileSelect);
 
 $('.console_invoke').on('click', function (){
     $('#content').empty();
-    $('#content').html("<svg height='1000' width='1000'>"+svgSeq(0,0,100,100,"Test")+"</svg>");
+    $('#content').html("<svg height='1000' width='1000'>"+svgSwitch(0,0,200,"Test")+"</svg>");
 });
 
 /**
@@ -280,6 +452,7 @@ function changeText (id, text) {
     items[id].text = text;
     drawView();
 }
+
 
 /**
 * @syntax addItem(type, index)

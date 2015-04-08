@@ -60,8 +60,24 @@ footer{
     /*box-shadow: inset 0px -2px 2px 0px #428BCA;*/
 }
 
-.svg_seq{
+.svg_text{
     font-family: Verdana;
     font-size: 12px;
     text-anchor: middle;
+}
+
+.svg_text_switch{
+    font-family: Verdana;
+    font-size: 12px;
+    text-anchor: end;    
+}
+
+.svg_if{
+    font-family: Verdana;
+    font-size: 12px;
+}
+
+.svg_border{
+    fill:#ffffff;
+    stroke:#000000;
 }
