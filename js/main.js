@@ -1,4 +1,4 @@
-//Global blank data array
+/* global items, err */
 items = [];
 
 /*
@@ -272,7 +272,6 @@ function svgIf(x0, y0, w, h, text){
  * @param {Number} x0 The origin x coordinate of the object
  * @param {Number} y0 The origin y coordinate of the object
  * @param {Number} w The width of the object
- * @param {Number} h The height of the object
  * @param {String} text The text in the object
  * @returns {String} The inline SVG as a HTML string
  */
@@ -348,7 +347,7 @@ function populate(items){
 
 function clear(){
     items = [];
-    items[0] = {class:"Procedure Name",text:"Procedure"}
+    items[0] = {class:"Procedure Name",text:"Procedure"};
     drawView();
 }
 
