@@ -293,6 +293,17 @@ function svgSwitch(x0, y0, w, text){
 }
 
 
+/**
+ * 
+ * @returns {Array} Array with the SVG Strings, xend and yend at the end
+ */
+function createSVG(startIndex){
+    var SVGArray = [];
+    
+    return SVGArray;
+    
+}
+
 
 
 /**
@@ -370,12 +381,12 @@ function enableItemAddition(type){
 /**
 *   1.1 Menu Click-Eventhandler
 */
-$('.addItem').on('click', function(){
+$('#addItem').on('click', function(){
     //register event handler for each div eligible to get another div appended to
     enableItemAddition(this.id);
 });
 
-$('.new_view').on('click', function(){
+$('#new_view').on('click', function(){
     //Load the item-array with dummy data
     items = [
     {
@@ -402,7 +413,7 @@ $('.new_view').on('click', function(){
     drawView();
 });
 
-$('.clear_view').on('click', function(){
+$('#clear_view').on('click', function(){
     clear();
 });
 
@@ -412,9 +423,17 @@ $('#openFile').on('click', function(){
 
 $('#openFileDialog').on('change', handleFileSelect);
 
-$('.console_invoke').on('click', function (){
+$('#svg_create').on('click', function (){
     $('#content').empty();
     $('#content').html("<svg height='1000' width='1000'>"+svgSwitch(0,0,200,"Test")+"</svg>");
+});
+
+$('#debug_dump').on('click', function(){
+    items.forEach(
+            function(element, index) {
+                console.log("id: " + index + "; class: " + element.class);
+            }
+    );
 });
 
 /**
@@ -617,13 +636,13 @@ function handleFileSelect(evt) {
 function parseSTG(byte_result, text_result) {    
     var parseArray = [];
     if (byte_result.constructor === Array && typeof text_result === "string"){
-        var ProcStart;
         var ProcName;
         var Index = 0;
 
         //Match the procedure name
         var ValidStrings = text_result.match(/[a-zA-Z0-9_-]{2,}/g);
         ProcName = ValidStrings[2];
+        //Make the procedure element in items
         items[0] = {class:"Procedure Name",text:ProcName};
 
         // Find the beginning of the Procedure
@@ -665,8 +684,8 @@ function parseSTG(byte_result, text_result) {
  */
 function parse_structure(stg_array){
     var state = 1;
-    //Begin on index 3, because we don't need the Info before
-    for (var i=3; i < stg_array.length; i++){
+    //Begin on index 4, because we don't need the Info before
+    for (var i=4; i < stg_array.length; i++){
         switch (stg_array[i]){
             case "OT_STGRSEQ":
                 items.splice(items.length, 0, {class:"stgr_seq", text: stg_array[i+1]});
