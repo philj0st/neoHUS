@@ -287,21 +287,69 @@ function svgSwitch(x0, y0, w, text){
         console.log(svg);
     }
     else {
-        console.log("Wrong parameters provided for svgIf()");
+        console.log("Wrong parameters provided for svgSwitch()");
     }
     return svg;
 }
 
-
 /**
  * 
- * @returns {Array} Array with the SVG Strings, xend and yend at the end
+ * @param {type} startIndex
+ * @param {type} width
+ * @param {type} x
+ * @param {type} y
+ * @returns {Array}
  */
-function createSVG(startIndex){
+function createSVG(startIndex,width,x,y){
     var SVGArray = [];
-    
+    //Set heigth to predefined value
+    // #TODO Fix height (?)
+    var h=129.7;
+    if (typeof startIndex==="number"&&typeof width==="number"){
+        var endIndex = findEnd(startIndex);
+        switch (items[startIndex].class){
+            case "stgrseq":
+                SVGArray.push(svgSeq(x,y,width,h));
+                break;
+                
+            case "stgrsub":
+                SVGArray.push(svgSub(x,y,width,h));
+                break;
+                
+            case "stgrwhile":
+                SVGArray.push(svgWhile(x,y,width,h));
+                break;
+                
+            case "stgrrepeat":
+                SVGArray.push(svgRepeat(x,y,width,h));
+                break;
+                
+            case "stgrif":
+                SVGArray.push(svgIf(x,y,width,h));
+                break;
+            
+            case "stgrswitch":
+                SVGArray.push(svgSwitch(x,y,width));
+                break;
+            
+            case "stgrempty":
+                SVGArray.push(svgEmpty(x,y,width,h));
+                break;
+        }
+        
+        for (var i=startIndex+1; i<=endIndex; i++){
+            if (items[i].class==="stgrif"||items[i].class==="stgrwhile"||items[i].class==="stgrrepeat"||items[i].class==="stgrswitch"){
+                var cEndIndex = findEnd(i);
+                i=cEndIndex;
+                createSVG(cEndIndex);
+            }
+        }
+
+    }
+    else{
+        console.log("Wrong parameters provided for createSVG()");
+    }
     return SVGArray;
-    
 }
 
 
@@ -684,8 +732,8 @@ function parseSTG(byte_result, text_result) {
  */
 function parse_structure(stg_array){
     var state = 1;
-    //Begin on index 4, because we don't need the Info before
-    for (var i=4; i < stg_array.length; i++){
+    //Begin on index 3, because we don't need the Info before
+    for (var i=3; i < stg_array.length; i++){
         switch (stg_array[i]){
             case "OT_STGRSEQ":
                 items.splice(items.length, 0, {class:"stgr_seq", text: stg_array[i+1]});
